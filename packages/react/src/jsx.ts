@@ -30,7 +30,9 @@ export const jsx = (type: ElementType, config: any, ...maybeChildren: any) => {
 	const props: Props = {};
 	let ref: Ref = null;
 	// 这里和原有逻辑不一致暂时不清楚为什么
+	// @ts-ignore
 	for (const prop in config) {
+		// eslint-disable-next-line no-prototype-builtins
 		if (!config.hasOwnProperty(prop)) {
 			continue;
 		}
@@ -57,5 +59,33 @@ export const jsx = (type: ElementType, config: any, ...maybeChildren: any) => {
 			props.children = maybeChildren;
 		}
 	}
+	return ReactElement(type, key, ref, props);
+};
+// jsx 开发环境没有第三个参数
+
+export const jsxDEV = (type: ElementType, config: any) => {
+	let key: Key = null;
+	const props: Props = {};
+	let ref: Ref = null;
+
+	for (const prop in config) {
+		const val = config[prop];
+		if (prop === 'key') {
+			if (val !== undefined) {
+				key = '' + val;
+			}
+			continue;
+		}
+		if (prop === 'ref') {
+			if (val !== undefined) {
+				ref = val;
+			}
+			continue;
+		}
+		if ({}.hasOwnProperty.call(config, prop)) {
+			props[prop] = val;
+		}
+	}
+
 	return ReactElement(type, key, ref, props);
 };

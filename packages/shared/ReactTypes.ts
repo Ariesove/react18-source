@@ -13,3 +13,5 @@ export interface ReactElementType {
 	// 为了区分原生的react jsx
 	__mark: string;
 }
+// pay attention to the function type must be used ()
+export type Action<State> = State | ((prevState: State) => State);
